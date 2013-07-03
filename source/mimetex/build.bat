@@ -1,0 +1,1 @@
+ gcc -DAA -DWINDOWS mimetex.c gifsave.c -lm -o mimetex.exe
