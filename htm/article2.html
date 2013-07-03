@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
+  <link rel="stylesheet" href="../css/pmag.css" type="text/css" />
+</head>
+<body>
+<div id="header_wrap">
+   <h1><a href="https://www.facebook.com/groups/programmerMagazine">程式人雜誌</a> <sub> --  <a href="https://dl.dropbox.com/u/101584453/pmag/201308/htm/home.html">2013 年 8 月號</a> (開放公益出版品)</sub></h1>
+</div>
+<div id="content">
+<div id="TOC">
+<ul>
+<li><a href="#javascript-8-中文版-eliza-聊天程式作者陳鍾誠">JavaScript (8) – 中文版 Eliza 聊天程式(作者：陳鍾誠)</a></li>
+<li><a href="#正規表達式程式範例">正規表達式程式範例</a></li>
+</ul>
+</div>
+<h2 id="javascript-8-中文版-eliza-聊天程式作者陳鍾誠"><a href="#javascript-8-中文版-eliza-聊天程式作者陳鍾誠">JavaScript (8) – 中文版 Eliza 聊天程式(作者：陳鍾誠)</a></h2>
+<h2 id="正規表達式程式範例"><a href="#正規表達式程式範例">正規表達式程式範例</a></h2>
+<p>程式範例：regexp.js</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> re = <span class="kw">new</span> <span class="fu">RegExp</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">d+&quot;</span>, <span class="st">&quot;gi&quot;</span>);
+<span class="kw">var</span> str = <span class="st">&quot;name:john age:20 birthday:1990/8/31&quot;</span>;
+
+<span class="kw">var</span> m = <span class="kw">null</span>;
+<span class="kw">while</span> (m = <span class="ot">re</span>.<span class="fu">exec</span>(str))
+    <span class="ot">console</span>.<span class="fu">log</span>(<span class="ot">m</span>.<span class="fu">toString</span>());
+    
+<span class="kw">var</span> p = <span class="fu">parse</span>(str);
+<span class="ot">console</span>.<span class="fu">log</span>(<span class="st">&quot;p.name=&quot;</span>+<span class="ot">p</span>.<span class="fu">name</span>+<span class="st">&quot; age=&quot;</span>+<span class="ot">p</span>.<span class="fu">age</span>+<span class="st">&quot; year=&quot;</span>+<span class="ot">p</span>.<span class="fu">year</span>+<span class="st">&quot; month=&quot;</span>+<span class="ot">p</span>.<span class="fu">month</span>+<span class="st">&quot; day=&quot;</span>+<span class="ot">p</span>.<span class="fu">day</span>);
+
+<span class="kw">function</span> <span class="fu">parse</span>(data) {
+    <span class="kw">var</span> e=<span class="kw">new</span> <span class="fu">RegExp</span>(<span class="st">&quot;name:(</span><span class="ch">\\</span><span class="st">w+) age:(</span><span class="ch">\\</span><span class="st">d+) birthday:(</span><span class="ch">\\</span><span class="st">d+)/(</span><span class="ch">\\</span><span class="st">d+)/(</span><span class="ch">\\</span><span class="st">d+)&quot;</span>, <span class="st">&quot;gi&quot;</span>);
+
+    <span class="kw">if</span> (<span class="ot">data</span>.<span class="fu">match</span>(e)) {
+        <span class="kw">return</span>  {<span class="dt">exp</span>: RegExp[<span class="st">&#39;$&amp;&#39;</span>],
+                <span class="dt">name</span>: <span class="ot">RegExp</span>.<span class="fu">$1</span>,
+                <span class="dt">age</span>:<span class="ot">RegExp</span>.<span class="fu">$2</span>,
+                <span class="dt">year</span>:<span class="ot">RegExp</span>.<span class="fu">$3</span>,
+                <span class="dt">month</span>:<span class="ot">RegExp</span>.<span class="fu">$4</span>,
+                <span class="dt">day</span>:<span class="ot">RegExp</span>.<span class="fu">$5</span>};
+    }
+    <span class="kw">else</span> {
+        <span class="kw">return</span> <span class="kw">null</span>;
+    }
+}
+
+<span class="ot">String</span>.<span class="ot">prototype</span>.<span class="fu">trim</span> = <span class="kw">function</span>() { 
+  <span class="kw">return</span> <span class="kw">this</span>.<span class="fu">replace</span>(<span class="ot">/</span><span class="fl">(</span><span class="ot">^</span><span class="bn">\s</span><span class="fl">*)|(</span><span class="bn">\s</span><span class="fl">*</span><span class="ot">$</span><span class="fl">)</span><span class="ot">/g</span>, <span class="st">&quot;&quot;</span>); 
+}
+
+<span class="ot">console</span>.<span class="fu">log</span>(<span class="st">&quot;&#39; abc &#39;.trim()=&#39;&quot;</span>+<span class="st">&#39; abc &#39;</span>.<span class="fu">trim</span>()+<span class="st">&quot;&#39;&quot;</span>);</code></pre>
+<p>執行結果</p>
+<pre><code>D:\code\node&gt;node regexp.js
+&#39; abc &#39;.trim()=&#39;abc&#39;
+20
+1990
+8
+31
+p.name=john age=20 year=1990 month=8 day=31
+
+D:\code\node&gt;node RegexpTest.js
+20
+1990
+8
+31
+p.name=john age=20 year=1990 month=8 day=31
+&#39; abc &#39;.trim()=&#39;abc&#39;</code></pre>
+<h3 id="程式範例將內嵌於-markdown-中的-tex-數學式轉換為影像檔連結"><a href="#程式範例將內嵌於-markdown-中的-tex-數學式轉換為影像檔連結">程式範例：將內嵌於 Markdown 中的 Tex 數學式轉換為影像檔連結</a></h3>
+<p>程式：md0.js</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> http = <span class="fu">require</span>(<span class="st">&#39;http&#39;</span>);
+<span class="kw">var</span> fs = <span class="fu">require</span>(<span class="st">&quot;fs&quot;</span>);
+<span class="kw">var</span> crypto = <span class="fu">require</span>(<span class="st">&#39;crypto&#39;</span>);
+<span class="kw">var</span> child_process = <span class="fu">require</span>(<span class="st">&#39;child_process&#39;</span>);
+<span class="kw">var</span> log = <span class="ot">console</span>.<span class="fu">log</span>;
+<span class="kw">var</span> argv = <span class="ot">process</span>.<span class="fu">argv</span>;
+
+<span class="kw">var</span> md0 = <span class="ot">fs</span>.<span class="fu">readFileSync</span>(argv[<span class="dv">2</span>], <span class="st">&quot;utf8&quot;</span>);
+<span class="kw">var</span> md  = <span class="fu">tex2md</span>(md0);
+<span class="ot">fs</span>.<span class="fu">writeFileSync</span>(argv[<span class="dv">3</span>], md, <span class="st">&quot;utf8&quot;</span>);
+
+<span class="kw">function</span> <span class="fu">hash</span>(o) {
+  <span class="kw">var</span> hash = <span class="ot">crypto</span>.<span class="fu">createHash</span>(<span class="st">&#39;md5&#39;</span>);
+  <span class="ot">hash</span>.<span class="fu">update</span>(<span class="ot">o</span>.<span class="fu">toString</span>());
+  <span class="kw">return</span> <span class="ot">hash</span>.<span class="fu">digest</span>(<span class="st">&#39;hex&#39;</span>);
+}
+
+<span class="kw">function</span> <span class="fu">tex2md</span>(md0) {
+  <span class="kw">var</span> md  = <span class="st">&quot;&quot;</span>;
+  re = <span class="kw">new</span> <span class="fu">RegExp</span>(<span class="ot">/</span><span class="fl">\$(</span><span class="bn">\S</span><span class="ot">.</span><span class="fl">*?</span><span class="bn">\S</span><span class="fl">)\$</span><span class="ot">/gm</span>); <span class="co">// *?, +? non greedy, m for multiline</span>
+  <span class="kw">var</span> lastEnd = <span class="dv">0</span>;
+<span class="co">//  var imgUrl = &quot;http://chart.apis.google.com/chart?cht=tx&amp;amp;chl=[etex]&quot;;</span>
+  <span class="kw">var</span> texPattern = <span class="st">&quot; ![]([imgpath].jpg) &quot;</span>;
+  <span class="kw">while</span>((m = <span class="ot">re</span>.<span class="fu">exec</span>(md0)) !== <span class="kw">null</span>) {
+    <span class="kw">var</span> tex = m[<span class="dv">1</span>];
+    <span class="kw">var</span> imgpath = <span class="st">&quot;../timg/&quot;</span>+<span class="ot">tex</span>.<span class="fu">replace</span>(<span class="ot">/</span><span class="bn">\W</span><span class="fl">+</span><span class="ot">/g</span>, <span class="st">&quot;_&quot;</span>).<span class="fu">substr</span>(<span class="dv">0</span>,<span class="dv">8</span>)+<span class="st">&quot;_&quot;</span>+<span class="fu">hash</span>(tex);
+    <span class="fu">tex2file</span>(tex, imgpath);
+    md += <span class="ot">md0</span>.<span class="fu">substring</span>(lastEnd, <span class="ot">m</span>.<span class="fu">index</span>)+<span class="ot">texPattern</span>.<span class="fu">replace</span>(<span class="st">&quot;[tex]&quot;</span>, tex).<span class="fu">replace</span>(<span class="st">&quot;[imgpath]&quot;</span>, imgpath);
+    lastEnd = <span class="ot">m</span>.<span class="fu">index</span> + m[<span class="dv">0</span>].<span class="fu">length</span>;
+  }
+  md += <span class="ot">md0</span>.<span class="fu">substring</span>(lastEnd);
+  <span class="kw">return</span> md;
+}
+
+<span class="co">/* Mimetex 的下載、編譯及用法請參考：http://www.forkosh.com/mimetexmanual.html</span>
+<span class="co">執行範例：</span>
+<span class="co">D:\201305\mimetex&gt;gcc -DAA mimetex.c gifsave.c -lm -o mimetex.cgi</span>
+<span class="co">D:\201305\mimetex&gt;gcc -DAA mimetex.c gifsave.c -lm -o mimetex</span>
+<span class="co">D:\201305\mimetex&gt;mimetex -d &quot;x^2+y^2&quot; &gt; exp.gif</span>
+
+<span class="co">影像從 gif 轉為 jpg 的方法，使用 imagemagic (command line)</span>
+<span class="co">參考：http://www.imagemagick.org/script/convert.php</span>
+<span class="co">例如：convert rose.gif rose.jpg */</span>
+
+<span class="kw">function</span> <span class="fu">tex2file</span>(tex, filename) {
+  <span class="kw">var</span> command = <span class="st">&#39;tex2img.bat &quot;&#39;</span>+tex+<span class="st">&#39;&quot; &#39;</span>+filename;
+  <span class="ot">child_process</span>.<span class="fu">exec</span>(command, <span class="kw">function</span>(err, stdout, stderr) {
+      <span class="fu">log</span>(command+<span class="st">&quot; finished!</span><span class="ch">\n</span><span class="st">&quot;</span>);
+      <span class="fu">log</span>(<span class="st">&quot;err=&quot;</span>+err);
+  });
+}</code></pre>
+<h3 id="參考"><a href="#參考">參考</a></h3>
+</div>
+<div id="footer">
+<a href="https://www.facebook.com/groups/programmerMagazine/">程式人雜誌</a> ，採用 <a href="http://creativecommons.org/licenses/by-sa/3.0/tw/ ">創作共用：姓名標示、相同方式分享</a> 授權，歡迎加入 <a href="https://www.facebook.com/groups/programmerMagazine/">雜誌社團</a>
+</div>
+</body>
+</html>
