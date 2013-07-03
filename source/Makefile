@@ -3,19 +3,19 @@ PANDOC = pandoc -s --webtex
 MD0 = $(patsubst %.md0,%.md,$(wildcard *.md0))
 # MD0 = $(wildcard *.md0)
 HTML = $(patsubst %.md,%.html,$(wildcard *.md)) $(patsubst %.md0,%.html,$(wildcard *.md0))
-MD   = license.md message.md message1.md  message2.md \
-people.md people1.md  video.md video1.md video2.md \
-discuss.md discuss1.md discuss2.md discuss3.md \
-article.md article1.md article2.md article3.md article4.md info.md reflink.md9
+MD   = preface.md editor.md license.md message.md message1.md \
+people.md people1.md video.md video1.md \
+discuss.md discuss1.md science.md science1.md \
+article.md article1.md article2.md article3.md article4.md article5.md info.md reflink.md9
 PARG = -c ../css/pmag.css -B header.htm -A footer.htm --toc --base-header-level=1 --toc-depth=2 
 PEPUB = --toc --base-header-level=1 --toc-depth=2 --epub-metadata=metadata.xml --epub-stylesheet=../css/pmag.css 
 EARG = --margin-top=16 --margin-bottom=16 --margin-left=20 --margin-right=20 \
 --pretty-print --base-font-size=9 --font-size-mapping="7, 8, 9, 12, 14, 16, 20, 24" 
 RM = rm -f
 
-.PHONY: all epubipad pdfipad pdfA4
+.PHONY: all
 
-all: $(HTML)
+all: $(HTML) $(epubipad) $(epubA4) $(pdfipad) $(pdfA4)
 
 epubA4: $(MD0)
 	$(PANDOC) $(PEPUB) --epub-cover-image=../img/coverA4.png $(MD) -o ../book/A4.epub

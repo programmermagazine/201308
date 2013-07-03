@@ -5,33 +5,38 @@
 
 出刊年月       epub           ipad:PDF      A4:PDF     單頁 HTM     原始碼      全部下載
 ------------   ----------     -----------   --------   -----------  ----------  -------------
-2013年5月      [epub]         [ipad.pdf]    [A4.pdf]   [pmag.html]  [code.zip]  [201305.zip]
+2013年8月      [epub]         [ipad.pdf]    [A4.pdf]   [pmag.html]  [code.zip]  [all.zip]
 
 ### 本期內容
-* [授權聲明](license.html)
+* 前言
+    * [編輯小語](editor.html)
+    * [授權聲明](license.html)
 * 程式人短訊
-    * [軟體短訊 – CMake 專案檔產生工具](message1.html)
-    * [硬體短訊 – Raspberry Pi 單板電腦](message2.html)
+    * [課程短訊 – 線上教育 MOOC 的新發展](message1.html)
 * 程式人介紹
-    * [大師風采 – Donald Ervin Knuth](people1.html)
+    * [約耳趣談軟體的作者 - Avram Joel Spolsky](people1.html)
 * 程式人頻道
-    * [MIT 的自製電腦課程 – nand2tetris](video1.html)
-    * [看影片學 C# 遊戲程式(2) – 使用 Window Forms](video2.html)
+    * [Raffaello D'Andrea: 四軸飛行器驚人的運動能力](video1.html)
 * 程式人討論區
-    * [C 語言討論 – 學校沒教的那些事兒！ -- 以矩陣相加為例](discuss1.html)
-    * [軟體工程討論 – CMMI、Agile 與Scrum](discuss2.html)
-    * [JavaScript 討論 – 繼承的實作方法](discuss3.html)
+    * [新科技討論 – 南加州大學：Google量子計算機是真的](discuss1.html)
+* 程式與科學
+    * [資訊科學到底算不算是科學呢？ (作者：陳鍾誠)](science1.html)
 * 程式人文集
-    * [Arduino入門教學(5) – 多顆 LED 的控制 (作者：Cooper Maa)](article1.html)
-    * [JavaScript (5) – 在互動網頁中的應用，以 HTML 編輯器為例(作者：陳鍾誠)](article2.html)
-    * [R 統計軟體(3) – 中央極限定理 (作者：陳鍾誠)](article3.html)
-    * [OpenCV (1) – C 語言影像辨識函式庫 -- 簡介、安裝與基本範例 (作者：Da Wang)](article4.html)
+    * [Arduino入門教學(8) – 使用光敏電阻控制 LED 的開關 (作者：Cooper Maa)](article1.html)
+    * [JavaScript (8) – 中文版 Eliza 聊天程式 (作者：陳鍾誠)](article2.html)
+    * [Prolog 入門 (作者： KuoE0)](article3.html)
+    * [x86 machine code 初探 (0) - base register address mode (作者：Descent Sung)](article4.html)
+    * [電壓紋波與磁珠 (作者：趙琨堯)](article5.html)
 * [雜誌訊息](info.html)
     
-### 雜誌訂閱
-想訂閱程式人雜誌請按 [雜誌訂閱] 連結並填寫表單。
+### 雜誌取得
+
+程式人雜誌預定於每個月 1 日出刊，您可以從下列網址取得程式人雜誌的所有內容 (包含當月最新出刊的雜誌)。
+
+* <http://programmermagazine.github.com/home/>
 
 ### 連絡我們
+
 竭誠歡迎程式人投稿，或者成為本雜誌的專欄作家，現在就可以加入 [程式人雜誌社團] 一同共襄盛舉。
 
 本雜誌編輯為「陳鍾誠 (@ccckmit)」，若要聯絡編輯，請寄信到 <ccckmit@gmail.com>。
@@ -41,4 +46,5 @@
 [A4.pdf]: ../book/A4.pdf
 [code.zip]: ../code.zip
 [pmag.html]: ../book/pmag.html
-[201305.zip]: ../../201305.zip
+[all.zip]: https://github.com/programmermagazine/201308/archive/gh-pages.zip
+

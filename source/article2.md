@@ -1,4 +1,4 @@
-## JavaScript (8) – 正規表達式的運用 (作者：陳鍾誠)
+##JavaScript (8) – 中文版 Eliza 聊天程式(作者：陳鍾誠)
 
 
 
