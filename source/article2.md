@@ -1,122 +1,213 @@
 ##JavaScript (8) – 中文版 Eliza 聊天程式(作者：陳鍾誠)
 
+在這期程式人雜誌期的「程式與科學」主題中，我們已經介紹過下列主題。
 
+* [資訊科學到底算不算是科學呢？](http://programmermagazine.github.io/201308/htm/science1.html)
 
-## 正規表達式程式範例
+其中我們提到了「圖靈測試」( [Turing Test] ) 這個評量「程式是否有智慧」的方法，並且談到 1964 年 Joseph Weizenbaum 創造了一個稱為
+[Eliza] 的聊天程式，這個程式讓許多人誤以為是在和真人聊天，因此與它聊得很起勁，所以 Eliza 在某種程度上通過了「圖靈測試」。
 
-程式範例：regexp.js
+在本文中，我們將模仿 Joseph Weizenbaum 在 Eliza 中採用的方法，製作出一個中文版的 Eliza 聊天程式。我們將這個程式寫成一個 
+HTML + JavaScript 的網頁，您只要擁有瀏覽器就可以執行了 (筆者測試這個程式使用的瀏覽器是 Google Chrome)。
 
-```javascript
-var re = new RegExp("\\d+", "gi");
-var str = "name:john age:20 birthday:1990/8/31";
+### 使用畫面
 
-var m = null;
-while (m = re.exec(str))
-    console.log(m.toString());
-    
-var p = parse(str);
-console.log("p.name="+p.name+" age="+p.age+" year="+p.year+" month="+p.month+" day="+p.day);
+以下是筆者自己與聊天程式對談的一個聊天過程的畫面，當您輸入完每一句後請按下 「enter 鍵」或「送出鈕」，等待程式回答。
 
-function parse(data) {
-    var e=new RegExp("name:(\\w+) age:(\\d+) birthday:(\\d+)/(\\d+)/(\\d+)", "gi");
+![圖、與本聊天程式對談的畫面](../img/eliza_talkto2.png)
 
-    if (data.match(e)) {
-        return  {exp: RegExp['$&'],
-                name: RegExp.$1,
-                age:RegExp.$2,
-                year:RegExp.$3,
-                month:RegExp.$4,
-                day:RegExp.$5};
-    }
-    else {
-        return null;
-    }
-}
+如果想試用一下這個程式，可以連線到筆者的下列網頁，試著與「中文網頁版的 Eliza」 聊聊天。
 
-String.prototype.trim = function() { 
-  return this.replace(/(^\s*)|(\s*$)/g, ""); 
-}
+* <https://dl.dropboxusercontent.com/u/101584453/cl/code/talkto.htm>
 
-console.log("' abc '.trim()='"+' abc '.trim()+"'");
-```
+### 原始程式碼：talkto.htm
 
-執行結果
+這個程式的運作原裏很簡單，程式裏的 qaList 變數是一個 Q&A 陣列，當某個 Q 欄位中的詞彙 (或樣式) 
+出現在使用者輸入的文句中時，就會被觸發，然後程式會從 A 欄位隨機選出一個答案，來回答使用者。
+舉例而言，當您輸入：
 
-```
-D:\code\node>node regexp.js
-' abc '.trim()='abc'
-20
-1990
-8
-31
-p.name=john age=20 year=1990 month=8 day=31
+> 我不開心
 
-D:\code\node>node RegexpTest.js
-20
-1990
-8
-31
-p.name=john age=20 year=1990 month=8 day=31
-' abc '.trim()='abc'
-```
+這句話時，程式就會比對 qaList 中的樣式，發現以下 QA 物件中的「不」出現在「我不開心」這個句子裏，
+於是就觸發了這個規則
 
-### 程式範例：將內嵌於 Markdown 中的 Tex 數學式轉換為影像檔連結
+{ Q:"不", A:"為何不*?|所以你不*?"},
 
-程式：md0.js
+接著程式會用比對到問句的那個項目，也就是「不」字，去比對「我不開心」，於是比對結果為「我(不)開心」，
+然後將句尾的「開心」取出，並設定 tail = "開心"。
+
+接著程式會從 A 欄位的「為何不*?」、「所以你不*?」這兩個可能的回答中，隨機選出一個進行回答，
+如果選到的是「為何不*?」，那就會將其中的 * 取代成「開心」兩個字，因此作出「為何不開心?」這樣的回答。
+
+但是，有時使用者輸入的句子當中有「你」或「我」的對話角色用語，在回答時就必須將兩者倒過來，例如：
+假如使用者輸入
+
+> 我不喜歡你
+
+這時候比對結果是「我(不)喜歡你」，如果直接取出句尾替換，應該回答
+
+> 為何不喜歡你?
+
+但是這樣的答案顯然很不恰當，因此若將「你」與「我」的角色對換，就會變成：
+
+> 為何不喜歡我？
+
+這樣的答案在角色上就比較對，所以程式中的下列段落，就是在處理這種情況。
 
 ```javascript
-var http = require('http');
-var fs = require("fs");
-var crypto = require('crypto');
-var child_process = require('child_process');
-var log = console.log;
-var argv = process.argv;
-
-var md0 = fs.readFileSync(argv[2], "utf8");
-var md  = tex2md(md0);
-fs.writeFileSync(argv[3], md, "utf8");
-
-function hash(o) {
-  var hash = crypto.createHash('md5');
-  hash.update(o.toString());
-  return hash.digest('hex');
-}
-
-function tex2md(md0) {
-  var md  = "";
-  re = new RegExp(/\$(\S.*?\S)\$/gm); // *?, +? non greedy, m for multiline
-  var lastEnd = 0;
-//  var imgUrl = "http://chart.apis.google.com/chart?cht=tx&amp;chl=[etex]";
-  var texPattern = " ![]([imgpath].jpg) ";
-  while((m = re.exec(md0)) !== null) {
-    var tex = m[1];
-    var imgpath = "../timg/"+tex.replace(/\W+/g, "_").substr(0,8)+"_"+hash(tex);
-    tex2file(tex, imgpath);
-    md += md0.substring(lastEnd, m.index)+texPattern.replace("[tex]", tex).replace("[imgpath]", imgpath);
-    lastEnd = m.index + m[0].length;
-  }
-  md += md0.substring(lastEnd);
-  return md;
-}
-
-/* Mimetex 的下載、編譯及用法請參考：http://www.forkosh.com/mimetexmanual.html
-執行範例：
-D:\201305\mimetex>gcc -DAA mimetex.c gifsave.c -lm -o mimetex.cgi
-D:\201305\mimetex>gcc -DAA mimetex.c gifsave.c -lm -o mimetex
-D:\201305\mimetex>mimetex -d "x^2+y^2" > exp.gif
-
-影像從 gif 轉為 jpg 的方法，使用 imagemagic (command line)
-參考：http://www.imagemagick.org/script/convert.php
-例如：convert rose.gif rose.jpg */
-
-function tex2file(tex, filename) {
-  var command = 'tex2img.bat "'+tex+'" '+filename;
-  child_process.exec(command, function(err, stdout, stderr) {
-      log(command+" finished!\n");
-      log("err="+err);
-  });
-}
+tail = tail.replace("我", "#").replace("你", "我").replace("#", "你");
 ```
+
+以下是整個「中文版 Eliza」，也就是 talkto.htm 這個程式的完整原始碼，請讀者參考：
+
+```html
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+</head>
+<body onload="onRuleLoaded()">
+  <div>
+   請輸入問題：
+   <input id="say" name="say" type="text" value="" size="80" onkeydown="keyin(event)"/> <!-- 按 enter 時呼叫 keyin() 回答 --> 
+   <input type="submit" value="送出" onclick="say()"/> <!-- 當送出按鈕按下，就呼叫 say() 函數回答 --> 
+  </div>
+  <BR/>
+  <div id="dialogBox" style="width:95%; height:80%; overflow:auto; border:ridge 1px #888888; ">
+>> 您好，我的朋友! 有心事嗎 ?<BR/>  
+  </div>
+  <script type="text/javascript">  
+/* 以下為本程式回答問題時使用的 Q&A 規則，例如對於以下 Q&A 規則物件
+
+ { Q:"想 | 希望", A:"為何想*呢?|真的想*?|那就去做阿?為何不呢?"},
+
+代表的是，當您輸入的字串中有「想」或「希望」這樣的詞彙時，
+程式就會從 A: 欄位中的回答裏隨機選出一個來回答。
+
+回答語句中的 * 代表比對詞彙之後的字串，舉例而言、假如您說：
+
+    我想去巴黎
+
+那麼我們的程式從這四個可能的規則中隨機挑出一個來產生答案，產生的答案可能是：
+
+為何想去巴黎呢?
+真的想去巴黎?
+那就去做阿?
+為何不呢?
+
+Eliza 就是一個這麼簡單的程式而已。*/
+// Q&A 陣列宣告
+var qaList = [
+{ Q:"謝謝", A:"不客氣!"},
+{ Q:"對不起 | 抱歉 | 不好意思", A:"別說抱歉 !|別客氣，儘管說 !"},
+{ Q:"可否 | 可不可以", A:"你確定想*?"},
+{ Q:"我想", A:"你為何想*?"},
+{ Q:"我要", A:"你為何要*?"},
+{ Q:"你是", A:"你認為我是*?"},
+{ Q:"認為 | 以為", A:"為何說*?"},
+{ Q:"感覺", A:"常有這種感覺嗎?"},
+{ Q:"為何不", A:"你希望我*!"},
+{ Q:"是否", A:"為何想知道是否*?"},
+{ Q:"不能", A:"為何不能*?|你試過了嗎?|或許你現在能*了呢?"},
+{ Q:"我是", A:"你好，久仰久仰!"},
+{ Q:"甚麼 | 什麼 | 何時 | 誰 | 哪裡 | 如何 | 為何 | 因何", A:"為何這樣問?|為何你對這問題有興趣?|你認為答案是甚麼呢?|你認為如何呢?|你常問這類問題嗎?|這真的是你想知道的嗎?|為何不問問別人?|你曾有過類似的問題嗎?|你問這問題的原因是甚麼呢?"},
+{ Q:"原因", A:"這是真正的原因嗎?|還有其他原因嗎?"}, 
+{ Q:"理由", A:"這說明了甚麼呢?|還有其他理由嗎?"},
+{ Q:"你好 | 嗨 | 您好", A:"你好，有甚麼問題嗎?"},
+{ Q:"或許", A:"你好像不太確定?"},
+{ Q:"不曉得 | 不知道", A:"為何不知道?|在想想看，有沒有甚麼可能性?"},
+{ Q:"不想 | 不希望", A:"有沒有甚麼辦法呢?|為何不想*呢?|那你希望怎樣呢?"}, 
+{ Q:"想 | 希望", A:"為何想*呢?|真的想*?|那就去做阿?為何不呢?"},
+{ Q:"不", A:"為何不*?|所以你不*?"},
+{ Q:"請", A:"我該如何*呢?|你想要我*嗎?"},
+{ Q:"你", A:"你真的是在說我嗎?|別說我了，談談你吧!|為何這麼關心我*?|不要再說我了，談談你吧!|你自己*"},
+{ Q:"總是 | 常常", A:"能不能具體說明呢?|何時?"},
+{ Q:"像", A:"有多像?|哪裡像?"},
+{ Q:"對", A:"你確定嗎?|我了解!"},
+{ Q:"朋友", A:"多告訴我一些有關他的事吧!|你認識他多久了呢?"},
+{ Q:"電腦", A:"你說的電腦是指我嗎?"}, 
+{ Q:"難過", A:"別想它了|別難過|別想那麼多了|事情總是會解決的"},
+{ Q:"高興", A:"不錯ㄚ|太棒了|這樣很好ㄚ"},
+{ Q:"是阿|是的", A:"甚麼事呢?|我可以幫助你嗎?|我希望我能幫得上忙!"},
+{ Q:"", A:"我了解|我能理解|還有問題嗎 ?|請繼續說下去|可以說的更詳細一點嗎?|這樣喔! 我知道!|然後呢? 發生甚麼事?|再來呢? 可以多說一些嗎|接下來呢? |可以多告訴我一些嗎?|多談談有關你的事，好嗎?|想多聊一聊嗎|可否多告訴我一些呢?"}
+];  
+  
+	function random(n) { // 從 0 到 n-1 中選一個亂數
+      return Math.floor(Math.random()*n);
+	}
+	
+	function say() { // 當送出鍵按下時，會呼叫這個函數進行回答動作
+      append(document.getElementById("say").value); // 先將使用者輸入的問句放到「對話區」顯示。
+      answer(); // 然後回答使用者的問題。
+	}
+	
+	function keyin(event) { // 當按下 enter 鍵時，會呼叫此函數進行回答
+      var keyCode = event.which; // 取出按下的鍵
+      if (keyCode == 13) say(); // 如果是換行字元 \n ，就進行回答動作。
+	}
+	
+	function append(line) { // 將 line 放到「對話區」顯示。
+	  var dialogBox = document.getElementById("dialogBox"); // 取出對話框 
+	  dialogBox.innerHTML += line+"<BR/>\n"; // 加入 line 這行文字，並加入換行 <BR/>\n
+	  dialogBox.scrollTop = dialogBox.scrollHeight; // 捲動到最下方。
+	}
+
+	function answer() { // 回答問題
+      setTimeout(function () { // 停頓 1 到 3 秒再回答問題 (因為若回答太快就不像人了，人打字需要時間)
+  	    append(">> "+getAnswer());
+	  }, 1000+random(2000));
+	}
+	
+	function getAnswer() {
+	  var say = document.getElementById("say").value; // 取得使用者輸入的問句。
+	  for (var i in qaList) { // 對於每一個 QA 
+       try {
+	    var qa = qaList[i];
+		var qList = qa.Q.split("|"); // 取出 Q 部分，分割成一個一個的問題字串 q
+	    var aList = qa.A.split("|"); // 取出回答 A 部分，分割成一個一個的回答字串 q
+		for (var qi in qList) { // 對於每個問題字串 q
+          var q = qList[qi];
+		  if (q=="") // 如果是最後一個「空字串」的話，那就不用比對，直接任選一個回答。
+		    return aList[random(aList.length)]; // 那就從答案中任選一個回答
+	      var r = new RegExp("(.*)"+q+"([^?.;]*)", "gi"); // 建立正規表達式 (.*) q ([^?.;]*)
+          if (say.match(r)) { // 比對成功的話
+            tail = RegExp.$2; // 就取出句尾
+            // 將問句句尾的「我」改成「你」，「你」改成「我」。
+            tail = tail.replace("我", "#").replace("你", "我").replace("#", "你");
+            return aList[random(aList.length)].replace(/\*/, tail); // 然後將 * 改為句尾進行回答
+		  }
+		}
+       } catch (err) {}
+	  }
+	  return "然後呢？"; // 如果發生任何錯誤，就回答「然後呢？」來混過去。
+    }	
+  </script>
+</body>
+</html>
+```
+
+### 結語
+
+雖然 Eliza 的運作原理非常簡單，但是卻成功的欺騙了不少人，讓人們可以與程式聊天，這是人工智慧史上一個重要的進展，
+雖然這個程式並不是真的很有「智慧」，或者說根本就是在「欺騙」人，但是卻能達成與人聊天這麼困難的任務，實在是一個
+非常令人驚訝的小程式。
+
+如果讀者曾經用過 Apple iPhone 上的 Siri，那麼應該可以體會到這種程式的用途。當然、Siri 比 Eliza 還要聰明一些，
+但事實上也沒有聰明太多，只要我們加入一些特殊的規則，Eliza 也可以輕易的被擴充成類似 Siri 的功能，例如看到
+「上市公司名稱」加上「價錢描述」，我們就猜測使用者是想查該公司的股票價格，於是就顯示「該公司的股價走勢」。
+
+這種方法其實在某種程度上抓到了使用者的意圖，因此在自然語言處理領域，透過規則比對其實是最容易撰寫與使用的一種方法，
+很多所謂的智慧型交談系統，其實都是這樣做出來的喔！
 
 ### 參考
+* Wikipedia:[Turing Test] -- <http://en.wikipedia.org/wiki/Turing_test>
+* 維基百科：[圖靈測試] -- <http://zh.wikipedia.org/wiki/%E5%9B%BE%E7%81%B5%E6%B5%8B%E8%AF%95>
+* Wikipedia:[Eliza] -- <http://en.wikipedia.org/wiki/ELIZA>
+* 陳鍾誠的網站:自然語言處理：Eliza -- <http://ccckmit.wikidot.com/nlp:eliza>
+* 自己動手設計交談機器人 (Eliza 中文版) - 使用 Java -- <http://ccckmit.wikidot.com/code:eliza>
+
+[Turing Test]:http://en.wikipedia.org/wiki/Turing_test
+[圖靈測試]:http://zh.wikipedia.org/wiki/%E5%9B%BE%E7%81%B5%E6%B5%8B%E8%AF%95
+[Eliza]:http://en.wikipedia.org/wiki/ELIZA
+
+
 

@@ -16,7 +16,7 @@
 * 程式人介紹
     * [約耳趣談軟體的作者 - Avram Joel Spolsky](people1.html)
 * 程式人頻道
-    * [Raffaello D'Andrea: 四軸飛行器驚人的運動能力](video1.html)
+    * [看影片學 Angular JS 互動式網頁框架](video1.html)
 * 程式人討論區
     * [新科技討論 – 南加州大學：Google量子計算機是真的](discuss1.html)
 * 程式與科學
@@ -26,7 +26,7 @@
     * [JavaScript (8) – 中文版 Eliza 聊天程式 (作者：陳鍾誠)](article2.html)
     * [Prolog 入門 (作者： KuoE0)](article3.html)
     * [x86 machine code 初探 (0) - base register address mode (作者：Descent Sung)](article4.html)
-    * [電壓紋波與磁珠 (作者：趙琨堯)](article5.html)
+    * [如何讓 R 與 Java 溝通 - rJava (作者：Taiwan R User Group)](article5.html)
 * [雜誌訊息](info.html)
     
 ### 雜誌取得

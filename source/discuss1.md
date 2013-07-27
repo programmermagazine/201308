@@ -4,7 +4,7 @@
 量子電腦應該還沒辦法產品化阿！該怎麼看這樣的新聞呢？
 
 * 南加州大學：Google量子計算機是真的
-	* <http://www.hksilicon.com/kb/articles/180950/Google#.UdG3>
+	* <http://www.hksilicon.com/kb/articles/180950/> 
 
 所以我就分享了這篇文章，發了下列訊息，看看有沒有高人可以提供訊息，
 
@@ -60,6 +60,7 @@
 * 維基百科:[態疊加原理](https://zh.wikipedia.org/wiki/%E6%80%81%E5%8F%A0%E5%8A%A0%E5%8E%9F%E7%90%86)
 * 維基百科:[量子相干性](https://zh.wikipedia.org/wiki/%E9%87%8F%E5%AD%90%E7%9B%B8%E5%B9%B2%E6%80%A7#.E9.87.8F.E5.AD.90-.7B.E7.9B.B8.E5.B9.B2.7D-.E6.80.A7)
 * Wikipedia:Quantum computer -- <https://en.wikipedia.org/wiki/Quantum_computer>
-* 南加州大學：Google量子計算機是真的 -- <http://www.hksilicon.com/kb/articles/180950/Google#.UdG3>
+* 南加州大學：Google量子計算機是真的 -- <http://www.hksilicon.com/kb/articles/180950/>
 
 【本文由陳鍾誠修改自維基百科】
+

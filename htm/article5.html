@@ -6,6 +6,25 @@
   <meta name="generator" content="pandoc" />
   <title></title>
   <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
   <link rel="stylesheet" href="../css/pmag.css" type="text/css" />
 </head>
 <body>
@@ -15,113 +34,224 @@
 <div id="content">
 <div id="TOC">
 <ul>
-<li><a href="#電壓紋波與磁珠-作者趙琨堯">電壓紋波與磁珠 (作者：趙琨堯)</a></li>
+<li><a href="#如何讓-r-與-java-溝通---rjava-作者taiwan-r-user-group">如何讓 R 與 Java 溝通 - rJava (作者：Taiwan R User Group)</a></li>
 </ul>
 </div>
-<h2 id="電壓紋波與磁珠-作者趙琨堯"><a href="#電壓紋波與磁珠-作者趙琨堯">電壓紋波與磁珠 (作者：趙琨堯)</a></h2>
-<h3 id="簡介"><a href="#簡介">簡介</a></h3>
-<p>詹姆斯·M·「吉姆」·威廉姆斯 （1948年4月14日- 2011年6月12日）是一個模擬電路設計和技術工作的作者是誰布里克的麻省理工學院 （1968-1979） ， 美國國家半導體公司 （1979-1982）和凌力爾特公司（LTC）（1982年至2011年）。 [1]他遭受了中風 6月10日和2011年6月12日去世。</p>
-<p>他寫了超過350種出版物與模擬電路設計，包括5本書，21個美國國家半導體公司 ，62 凌特應用筆記應用筆記， EDN雜誌和超過125篇文章。</p>
-<h3 id="電壓紋波的源頭"><a href="#電壓紋波的源頭">電壓紋波的源頭</a></h3>
-<p>首先我們看以下這段影片，內容是談線性穩壓電源供應器，在輸入端以及輸出端電容，從輸入端的電壓漣波所帶的一個高頻雜訊，在高頻上線性穩壓器的抑制來說幾乎無用， 另外因為在濾波元件上會有寄生效應存在，因此一般電感無法真對高頻有效抑制，</p>
-<p>資料來源: <a href="http://www.eettaiwan.com/">http://www.eettaiwan.com/</a></p>
+<h2 id="如何讓-r-與-java-溝通---rjava-作者taiwan-r-user-group"><a href="#如何讓-r-與-java-溝通---rjava-作者taiwan-r-user-group">如何讓 R 與 Java 溝通 - rJava (作者：Taiwan R User Group)</a></h2>
+<p>R 是目前最熱門的 Open Source 統計語言。除了傳統的統計檢定之外，R也有套件支援許多 Machine Learning 和 Data Mining 的技術。因此使用者可以很方便的在R上實作各種分析方法。</p>
+<p><a href="http://www.rforge.net/rJava/" title="rJava官網">rJava</a> 在 <a href="http://www.r-statistics.com/2013/06/top-100-r-packages-for-2013-jan-may/" title="Top 100 R packages for 2013 (Jan-May)!">Top 100 R packages for 2013</a> 名單中排名第17名，是讓 R 呼叫 Java 撰寫的物件(Class)、實例(Instance)和方法(Method)的套件。這個套件降低R調用Java既有的資源的難度，例如<a href="https://developers.google.com/apis-explorer/" title="Google APIs">Google APIs</a>、<a href="http://hadoop.apache.org/">Hadoop</a>等等。</p>
+<h3 id="安裝步驟"><a href="#安裝步驟">安裝步驟</a></h3>
+<p>輸入<code>install.packages('rJava')</code>，選取CRAN位置之後，便完成安裝。</p>
 <div class="figure">
-<img src="../img/ewave_screen1.jpg" />
+<img src="../img/install_s.png" alt="install" /><p class="caption">install</p>
 </div>
-<p>輸入的東西其實並非我們想要什麼，自然就給我們什麼，另外還包含一大堆寬頻諧波，</p>
+<h3 id="初始化rjava"><a href="#初始化rjava">初始化<code>rJava</code></a></h3>
+<p>每次在使用<code>rJava</code>之前，都要先啟動JVM：</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rJava)
+<span class="kw">.jinit</span>()</code></pre>
+<h3 id="hello-world"><a href="#hello-world">Hello World</a></h3>
+<p>我們先依照<a href="http://www.rforge.net/rJava/" title="rJava官網">rJava官網文件</a>的介紹，來Demo一個Hello World吧！首先，使用<a href="http://www.rforge.net/doc/packages/rJava/jnew.html" title="jnew Doc"><code>.jnew</code></a>來產生一個<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html" title="String JavaDoc">java.lang.String</a>的instance &quot;s&quot;，</p>
+<pre class="sourceCode r"><code class="sourceCode r">s &lt;-<span class="st"> </span><span class="kw">.jnew</span>(<span class="st">&quot;java/lang/String&quot;</span>, <span class="st">&quot;Hello World!&quot;</span>)
+s</code></pre>
+<pre><code>## [1] &quot;Java-Object{Hello World!}&quot;</code></pre>
+<p>從輸入s之後就可看出，s屬於Java-Object，且其內容為<code>Hello World!</code>。</p>
+<h3 id="建立java物件的reference"><a href="#建立java物件的reference">建立Java物件的Reference</a></h3>
+<p>透過 <code>J</code>，使用者可以取出Java物件的Reference，進而存入一個R的變數：</p>
+<pre class="sourceCode r"><code class="sourceCode r">pi &lt;-<span class="st"> </span><span class="kw">J</span>(<span class="st">&quot;java.lang.Math&quot;</span>)
+pi</code></pre>
+<pre><code>## [1] &quot;Java-Class-Name: java.lang.Math&quot;</code></pre>
+<h3 id="建立java實例"><a href="#建立java實例">建立Java實例</a></h3>
+<p>透過 <code>.jnew</code>，使用者可以建立某個Java物件的實例：</p>
+<pre class="sourceCode r"><code class="sourceCode r">s &lt;-<span class="st"> </span><span class="kw">.jnew</span>(<span class="st">&quot;java/lang/String&quot;</span>, <span class="st">&quot;Hello World!&quot;</span>)
+s</code></pre>
+<pre><code>## [1] &quot;Java-Object{Hello World!}&quot;</code></pre>
+<h3 id="取得java物件的屬性值"><a href="#取得java物件的屬性值">取得Java物件的屬性值</a></h3>
+<p>取得Java物件的屬性有兩種方法：</p>
+<ul>
+<li><a href="http://www.rforge.net/doc/packages/rJava/jfield.html" title="jfield Doc"><code>.jfield</code></a></li>
+<li><code>$</code>+Field名</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">.jfield</span>(<span class="st">&quot;java.lang.Math&quot;</span>, , <span class="st">&quot;PI&quot;</span>)</code></pre>
+<pre><code>## [1] 3.142</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">pi$PI</code></pre>
+<pre><code>## [1] 3.142</code></pre>
+<h3 id="使用物件的方法"><a href="#使用物件的方法">使用物件的方法</a></h3>
+<p>呼叫Java物件的方法可以用</p>
+<ul>
+<li><a href="http://www.rforge.net/doc/packages/rJava/jcall.html" title="jcall Doc"><code>.jcall</code></a> <code>.jcall</code>的第一個參數是java物件變數，第二個是Return Type(定義請見下圖，<a href="http://cran.r-project.org/web/packages/helloJavaWorld/vignettes/helloJavaWorld.pdf" title="Hello Java World! A Tutorial for Interfacing to Java Archives inside R Packages.">出處</a>)，第三是Java物件的方法名稱。</li>
+<li><code>$</code>+Method名</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">.jcall</span>(s, <span class="st">&quot;I&quot;</span>, <span class="st">&quot;length&quot;</span>)</code></pre>
+<pre><code>## [1] 12</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">s$<span class="kw">length</span>()</code></pre>
+<pre><code>## [1] 12</code></pre>
+<p>若是要查詢物件的Method，則可以利用：</p>
+<ul>
+<li><code>.jmethods</code></li>
+<li><code>names(obj)</code></li>
+<li><code>obj$</code>+<code>TAB</code>鍵(自動完成)</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">.jmethods</span>(pi)</code></pre>
+<pre><code>##  [1] &quot;public static int java.lang.Math.abs(int)&quot;                                                 
+##  [2] &quot;public static double java.lang.Math.abs(double)&quot;                                           
+##  [3] &quot;public static long java.lang.Math.abs(long)&quot;                                               
+##  [4] &quot;public static float java.lang.Math.abs(float)&quot;                                             
+##  [5] &quot;public static double java.lang.Math.sin(double)&quot;                                           
+##  [6] &quot;public static double java.lang.Math.cos(double)&quot;                                           
+##  [7] &quot;public static double java.lang.Math.tan(double)&quot;                                           
+##  [8] &quot;public static double java.lang.Math.atan2(double,double)&quot;                                  
+##  [9] &quot;public static double java.lang.Math.sqrt(double)&quot;                                          
+## [10] &quot;public static double java.lang.Math.log(double)&quot;                                           
+## [11] &quot;public static double java.lang.Math.log10(double)&quot;                                         
+## [12] &quot;public static double java.lang.Math.pow(double,double)&quot;                                    
+## [13] &quot;public static double java.lang.Math.exp(double)&quot;                                           
+## [14] &quot;public static long java.lang.Math.min(long,long)&quot;                                          
+## [15] &quot;public static double java.lang.Math.min(double,double)&quot;                                    
+## [16] &quot;public static int java.lang.Math.min(int,int)&quot;                                             
+## [17] &quot;public static float java.lang.Math.min(float,float)&quot;                                       
+## [18] &quot;public static float java.lang.Math.max(float,float)&quot;                                       
+## [19] &quot;public static double java.lang.Math.max(double,double)&quot;                                    
+## [20] &quot;public static long java.lang.Math.max(long,long)&quot;                                          
+## [21] &quot;public static int java.lang.Math.max(int,int)&quot;                                             
+## [22] &quot;public static double java.lang.Math.scalb(double,int)&quot;                                     
+## [23] &quot;public static float java.lang.Math.scalb(float,int)&quot;                                       
+## [24] &quot;public static int java.lang.Math.getExponent(double)&quot;                                      
+## [25] &quot;public static int java.lang.Math.getExponent(float)&quot;                                       
+## [26] &quot;public static float java.lang.Math.signum(float)&quot;                                          
+## [27] &quot;public static double java.lang.Math.signum(double)&quot;                                        
+## [28] &quot;public static double java.lang.Math.asin(double)&quot;                                          
+## [29] &quot;public static double java.lang.Math.acos(double)&quot;                                          
+## [30] &quot;public static double java.lang.Math.atan(double)&quot;                                          
+## [31] &quot;public static double java.lang.Math.toRadians(double)&quot;                                     
+## [32] &quot;public static double java.lang.Math.toDegrees(double)&quot;                                     
+## [33] &quot;public static double java.lang.Math.cbrt(double)&quot;                                          
+## [34] &quot;public static double java.lang.Math.IEEEremainder(double,double)&quot;                          
+## [35] &quot;public static double java.lang.Math.ceil(double)&quot;                                          
+## [36] &quot;public static double java.lang.Math.floor(double)&quot;                                         
+## [37] &quot;public static double java.lang.Math.rint(double)&quot;                                          
+## [38] &quot;public static long java.lang.Math.round(double)&quot;                                           
+## [39] &quot;public static int java.lang.Math.round(float)&quot;                                             
+## [40] &quot;public static double java.lang.Math.random()&quot;                                              
+## [41] &quot;public static float java.lang.Math.ulp(float)&quot;                                             
+## [42] &quot;public static double java.lang.Math.ulp(double)&quot;                                           
+## [43] &quot;public static double java.lang.Math.sinh(double)&quot;                                          
+## [44] &quot;public static double java.lang.Math.cosh(double)&quot;                                          
+## [45] &quot;public static double java.lang.Math.tanh(double)&quot;                                          
+## [46] &quot;public static double java.lang.Math.hypot(double,double)&quot;                                  
+## [47] &quot;public static double java.lang.Math.expm1(double)&quot;                                         
+## [48] &quot;public static double java.lang.Math.log1p(double)&quot;                                         
+## [49] &quot;public static double java.lang.Math.copySign(double,double)&quot;                               
+## [50] &quot;public static float java.lang.Math.copySign(float,float)&quot;                                  
+## [51] &quot;public static double java.lang.Math.nextAfter(double,double)&quot;                              
+## [52] &quot;public static float java.lang.Math.nextAfter(float,double)&quot;                                
+## [53] &quot;public static double java.lang.Math.nextUp(double)&quot;                                        
+## [54] &quot;public static float java.lang.Math.nextUp(float)&quot;                                          
+## [55] &quot;public final native void java.lang.Object.wait(long) throws java.lang.InterruptedException&quot;
+## [56] &quot;public final void java.lang.Object.wait() throws java.lang.InterruptedException&quot;           
+## [57] &quot;public final void java.lang.Object.wait(long,int) throws java.lang.InterruptedException&quot;   
+## [58] &quot;public native int java.lang.Object.hashCode()&quot;                                             
+## [59] &quot;public final native java.lang.Class java.lang.Object.getClass()&quot;                           
+## [60] &quot;public boolean java.lang.Object.equals(java.lang.Object)&quot;                                  
+## [61] &quot;public java.lang.String java.lang.Object.toString()&quot;                                       
+## [62] &quot;public final native void java.lang.Object.notify()&quot;                                        
+## [63] &quot;public final native void java.lang.Object.notifyAll()&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(pi)</code></pre>
+<pre><code>##  [1] &quot;class&quot;          &quot;E&quot;              &quot;PI&quot;             &quot;abs(&quot;          
+##  [5] &quot;abs(&quot;           &quot;abs(&quot;           &quot;abs(&quot;           &quot;sin(&quot;          
+##  [9] &quot;cos(&quot;           &quot;tan(&quot;           &quot;atan2(&quot;         &quot;sqrt(&quot;         
+## [13] &quot;log(&quot;           &quot;log10(&quot;         &quot;pow(&quot;           &quot;exp(&quot;          
+## [17] &quot;min(&quot;           &quot;min(&quot;           &quot;min(&quot;           &quot;min(&quot;          
+## [21] &quot;max(&quot;           &quot;max(&quot;           &quot;max(&quot;           &quot;max(&quot;          
+## [25] &quot;scalb(&quot;         &quot;scalb(&quot;         &quot;getExponent(&quot;   &quot;getExponent(&quot;  
+## [29] &quot;signum(&quot;        &quot;signum(&quot;        &quot;asin(&quot;          &quot;acos(&quot;         
+## [33] &quot;atan(&quot;          &quot;toRadians(&quot;     &quot;toDegrees(&quot;     &quot;cbrt(&quot;         
+## [37] &quot;IEEEremainder(&quot; &quot;ceil(&quot;          &quot;floor(&quot;         &quot;rint(&quot;         
+## [41] &quot;round(&quot;         &quot;round(&quot;         &quot;random()&quot;       &quot;ulp(&quot;          
+## [45] &quot;ulp(&quot;           &quot;sinh(&quot;          &quot;cosh(&quot;          &quot;tanh(&quot;         
+## [49] &quot;hypot(&quot;         &quot;expm1(&quot;         &quot;log1p(&quot;         &quot;copySign(&quot;     
+## [53] &quot;copySign(&quot;      &quot;nextAfter(&quot;     &quot;nextAfter(&quot;     &quot;nextUp(&quot;       
+## [57] &quot;nextUp(&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">## pi$+TAB</code></pre>
 <div class="figure">
-<img src="../img/ewave_screen2.jpg" />
+<img src="../img/methodTAB.png" alt="obj$+TAB" /><p class="caption">obj$+TAB</p>
 </div>
+<h3 id="使用java-library-jar"><a href="#使用java-library-jar">使用Java Library Jar</a></h3>
+<p>如果使用者要呼叫非JDK內建的物件(如：<a href="http://www.eclipse.org/swt/" title="SWT: The Standard Widget Toolkit">SWT</a>)，則必須先匯入定義該物件的jar檔。具體操作如下：</p>
+<ul>
+<li>用<code>.jaddClassPath</code>設定R 搜尋<code>.jar</code>的路徑。</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">.jaddClassPath</span>(<span class="kw">dir</span>(<span class="st">&quot;C:/rJava&quot;</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>))</code></pre>
+<p>完成後，可用<code>.jclassPath()</code>來確認。</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">.jclassPath</span>()</code></pre>
+<pre><code>## [1] &quot;/home/wush/R/x86_64-pc-linux-gnu-library/3.0/rJava/java&quot;</code></pre>
+<p>接下來，新增一個SWT的Display物件。</p>
+<pre class="sourceCode r"><code class="sourceCode r">display &lt;-<span class="st"> </span><span class="kw">.jnew</span>(<span class="st">&quot;org/eclipse/swt/widgets/Display&quot;</span>)</code></pre>
+<p>再新增一個Shell物件來裝Display物件。</p>
+<pre class="sourceCode r"><code class="sourceCode r">shell &lt;-<span class="st"> </span><span class="kw">.jnew</span>(<span class="st">&quot;org/eclipse/swt/widgets/Shell&quot;</span>, display)
+shell$<span class="kw">open</span>()</code></pre>
+<p>便可產生出SWT視窗。</p>
 <div class="figure">
-<img src="../img/ewave_screen3.jpg" />
+<img src="../img/SWT_DEMO_s.png" alt="SWT Demo" /><p class="caption">SWT Demo</p>
 </div>
-<h3 id="這是供應器的波德圖"><a href="#這是供應器的波德圖">這是供應器的波德圖</a></h3>
+<h3 id="java-程式碼包裝成-r-package"><a href="#java-程式碼包裝成-r-package">Java 程式碼包裝成 R Package</a></h3>
+<p>接下來依照那，<a href="http://cran.r-project.org/web/packages/helloJavaWorld/vignettes/helloJavaWorld.pdf" title="Hello Java World! A Tutorial for Interfacing to Java Archives inside R Packages.">Hello Java World! A Tutorial for Interfacing to Java Archives inside R Packages.</a>，撰寫一個使用rJava的R Package。這樣所有之前繁瑣的設定動作，全部簡化成<code>library(xxx)</code>，而且需要的<code>jar</code>檔也可以隨著套件散佈，並安裝到適當的位置。</p>
+<h3 id="利用-google-smtp-傳送-email"><a href="#利用-google-smtp-傳送-email">利用 Google SMTP 傳送 Email</a></h3>
+<p>首先，撰寫好Java傳送Email的程式打包成jar檔，放置套件根目錄(範例中是<code>C:\helloJavaWorld</code>)內的<code>inst\java</code>目錄下，並於套件根目錄的R目錄下，新增email.R：</p>
+<pre class="sourceCode r"><code class="sourceCode r">email &lt;-<span class="st"> </span>function(s, o) {
+    email &lt;-<span class="st"> </span><span class="kw">.jnew</span>(<span class="st">&quot;addEvent&quot;</span>)
+    email$<span class="kw">GamilSender</span>(s, o)
+}</code></pre>
+<p>接下來要設定套件，讓email函數可以供其他使用者呼叫：</p>
+<ul>
+<li>到套件根目錄下的<code>DESCRIPTION</code>檔案之內，在<code>Collate:</code>下加上<code>'email.R'</code>。</li>
+<li>修改套件根目錄下的<code>NAMESPACE</code>檔案，在檔案中加上<code>export(&quot;email&quot;)</code>。</li>
+</ul>
+<p>完成後，透過</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;C:/helloJavaWorld&quot;</span>, <span class="dt">repos =</span> <span class="ot">NULL</span>, <span class="dt">type =</span> <span class="st">&quot;source&quot;</span>, <span class="dt">INSTALL_opts =</span> <span class="st">&quot;--no-multiarch&quot;</span>)</code></pre>
+<p>安裝剛剛建立的套件後，就可以用<code>email</code>函數來寄信了！</p>
 <div class="figure">
-<img src="../img/ewave_screen4.jpg" />
+<img src="../img/email_demo.png" alt="Email Demo" /><p class="caption">Email Demo</p>
 </div>
-<p>在低頻上的抑制力約有不錯的60DB左右，但是當頻率上升到1MHz時，只剩下25DB左右， 而在更後面的100MHz範圍時，就幾乎沒有調節能力了‧</p>
-<h3 id="寄生效應所產生的產物"><a href="#寄生效應所產生的產物">寄生效應所產生的產物</a></h3>
+<h3 id="swt-gui-while-loop-問題"><a href="#swt-gui-while-loop-問題">SWT GUI While Loop 問題</a></h3>
+<p>以下是另一個使用SWT的範例，<a href="https://github.com/philipz/R_Capital_API" title="範例 GitHub 位置">rJavaTest.java</a>。</p>
+<p>因R 是單緒程(Single Thread)，所以直接使用SWT語法的while loop，會發生R一直停在那Java程式(blocking)。為了避免blocking，我們將SWT的使用方法改寫成使用Java Thread物件，並利用<a href="http://en.wikipedia.org/wiki/Design_pattern" title="Wikipedia Design Pattern">Design Pattern</a> – <a href="http://en.wikipedia.org/wiki/Singleton_pattern" title="Wikipedia Singleton">Singleton</a>來取值，這是用rJava呼叫Java程式時可能會遇到的狀況。</p>
+<pre class="sourceCode r"><code class="sourceCode r">while (!<span class="kw">shell.isDisposed</span>()) {
+    if (!<span class="kw">display.readAndDispatch</span>()) 
+        <span class="kw">display.sleep</span>()
+}
+<span class="kw">display.dispose</span>()</code></pre>
 <div class="figure">
-<img src="../img/ewave_screen5.jpg" />
+<img src="../img/api_demo.png" alt="Singleton Demo" /><p class="caption">Singleton Demo</p>
 </div>
-<div class="figure">
-<img src="../img/ewave_screen6.jpg" />
-</div>
-<p>看到圖中寄生效應在輸入端，即使串接一顆電感，一樣會有一個寄生的並聯電容去破壞，而濾波電容則會不理想的出現寄生電感串聯著， 穩壓器內部的寄生則會讓雜訊到處傳遞，輸出端與輸入端是同樣的問題，</p>
-<div class="figure">
-<img src="../img/ewave_screen7.jpg" />
-</div>
-<div class="figure">
-<img src="../img/ewave_screen8.jpg" />
-</div>
-<h3 id="示波器上看到的典型效應"><a href="#示波器上看到的典型效應">示波器上看到的典型效應</a></h3>
-<div class="figure">
-<img src="../img/ewave_screen9.jpg" />
-</div>
-<div class="figure">
-<img src="../img/ewave_screen10.jpg" />
-</div>
-<div class="figure">
-<img src="../img/ewave_screen11.jpg" />
-</div>
-<p>如果你增加濾波電容大小，可以把漣波弄平，但是尖峰處依然很明顯，</p>
-<h3 id="秘密武器"><a href="#秘密武器">秘密武器</a></h3>
-<div class="figure">
-<img src="../img/ewave_screen12.jpg" />
-</div>
-<div class="figure">
-<img src="../img/ewave_screen13.jpg" />
-</div>
-<div class="figure">
-<img src="../img/ewave_screen14.jpg" />
-</div>
-<div class="figure">
-<img src="../img/ewave_screen15.jpg" />
-</div>
-<h3 id="量測技術"><a href="#量測技術">量測技術</a></h3>
-<div class="figure">
-<img src="../img/ewave_screen16.jpg" />
-</div>
-<div class="figure">
-<img src="../img/ewave_screen17.jpg" />
-</div>
-<p>在高頻量測上除了接上交漣電容外，要在對地接上50歐姆的電阻，右邊就是正確抓到突波的波形，</p>
-<div class="figure">
-<img src="../img/ewave_screen18.jpg" />
-</div>
-<div class="figure">
-<img src="../img/ewave_screen19.jpg" />
-</div>
-<h3 id="磁珠介紹---鐵氧體磁芯ferrite-cores"><a href="#磁珠介紹---鐵氧體磁芯ferrite-cores">磁珠介紹 - 鐵氧體磁芯(ferrite cores)</a></h3>
-<div class="figure">
-<img src="../img/ewave_screen20.jpg" />
-</div>
-<div class="figure">
-<img src="../img/ewave_screen21.jpg" />
-</div>
-<p>這是我們一般在電氣用品的電線上常常會看到的Power Core，這與一般的電感在構造上是有著差異的， Bead基本構造是在一根導體外面套上一個鐵粉心套筒,當導體流過交流電流時,就會在鐵粉套筒上感應交流磁場,而此交流磁場又會對導體感應反電動勢,因而 增加其交流阻抗;電感也是一樣,只是其導線是繞在一根棒狀鐵粉心的外圈,而導體流過交流電流時同樣會對鐵粉心感應磁場,同樣會增加其交流阻抗.所以同樣功 能但一個是導體在中心,鐵粉在外圈;另一個是鐵粉在中心而導體在外圈.</p>
-<p>資料來源： <a href="http://tw.knowledge.yahoo.com/question/question?qid=1507101102821">http://tw.knowledge.yahoo.com/question/question?qid=1507101102821</a></p>
-<h3 id="結語"><a href="#結語">結語</a></h3>
-<p>相信大家會對電壓紋波以及線性穩壓器有更深一層的認識，謝謝大家的觀看，希望都能有收獲‧</p>
-<h3 id="參考文獻"><a href="#參考文獻">參考文獻</a></h3>
-<ol style="list-style-type: decimal">
-<li>威廉姆斯，吉姆（1984年8月）， LT1005多功能穩壓器 ，應用注意事項1，凌力爾特公司的理解和運用</li>
-<li>威廉姆斯，吉姆（1987年9月）， 詩人的開關穩壓器：一個溫柔的指南的trepidatious ，應用筆記25，凌力爾特公司</li>
-<li>威廉姆斯，吉姆（1988年2月）， 熱電偶的測量 ，應用筆記28，凌力爾特公司</li>
-<li>威廉姆斯，吉姆（1990年6月）， 橋電路：結婚增益和平衡 ，應用筆記43，凌力爾特公司</li>
-<li>威廉姆斯，吉姆。 （1991）， 模擬電路設計：藝術，科學和人格 ，EDN系列為設計工程師，巴特沃斯-海涅曼， ISBN 978-0-7506-9640-1</li>
-<li>威廉姆斯，吉姆（1991年8月）， 高速放大器技術 ，應用筆記47，凌力爾特公司</li>
-<li>威廉姆斯，吉姆。 （1995）， 模擬電路設計的藝術與科學 ，EDN系列為設計工程師，巴特沃斯-海涅曼， ISBN 0-7506-9505-6</li>
-<li>威廉姆斯，吉姆（1995年11月）， 第四代的LCD背光技術 ，應用筆記65，凌力爾特公司</li>
-<li>威廉姆斯，吉姆（1999年）9月， 30納秒解決時間測量精密寬帶放大器 ，應用筆記79，凌力爾特公司</li>
-<li>吉姆·威廉姆斯，2003年5月， 寬帶放大器的壓擺率驗證：擺馴服 ，應用筆記94，凌力爾特公司</li>
-<li>威廉姆斯，吉姆（2010年3月）， 單片18位DAC，1ppm的穩定時間測量：當最後一個天使跳個不停上超速針頭？ ，應用筆記120，凌力爾特公司</li>
-<li>威廉姆斯，吉姆（2011年4月）， 聲學測溫的介紹 ，應用筆記131，凌力爾特公司</li>
-<li>[威廉姆斯，吉姆。 （1991）， 模擬電路設計：藝術，科學和人格 ，巴特沃斯-海涅曼</li>
-<li>RAKO，保羅（2011年6月13日）， 模擬大師吉姆·威廉姆斯死於中風後 ，EDN</li>
-<li>倫德伯格，肯特（7月31日），麻省理工學院 的吉姆·威廉姆斯 ， 參考書目</li>
-<li>RAKO，保羅（6月20日，2011年）， 模擬工程中喪生的傳奇人物鮑勃·皮斯車禍 ，EDN</li>
-</ol>
+<hr />
+<h3 id="作者"><a href="#作者">作者</a></h3>
+<h4 id="philipz-philipzhenggmail.com"><a href="#philipz-philipzhenggmail.com">Philipz (<script type="text/javascript">
+<!--
+h='&#x67;&#x6d;&#x61;&#x69;&#108;&#46;&#x63;&#x6f;&#x6d;';a='&#64;';n='&#112;&#104;&#x69;&#108;&#x69;&#112;&#122;&#104;&#x65;&#110;&#x67;';e=n+a+h;
+document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+e+'<\/'+'a'+'>');
+// -->
+</script><noscript>&#112;&#104;&#x69;&#108;&#x69;&#112;&#122;&#104;&#x65;&#110;&#x67;&#32;&#x61;&#116;&#32;&#x67;&#x6d;&#x61;&#x69;&#108;&#32;&#100;&#x6f;&#116;&#32;&#x63;&#x6f;&#x6d;</noscript>)</a></h4>
+<ul>
+<li><a href="https://www.facebook.com/Tw.R.User">Taiwan R User Group</a> Officer</li>
+<li>研究領域：Image Processing, Software Engineering, Algorithmic Trading</li>
+<li>開放原始碼專案：<a href="https://github.com/philipz/FuturesBot">TradingBot 程式交易機器人</a></li>
+<li>Blog: <a href="http://server.everfine.com.tw/blog/">Philipz學習日誌</a></li>
+</ul>
+<h4 id="wush-wu-wush978gmail.com"><a href="#wush-wu-wush978gmail.com">Wush Wu (<script type="text/javascript">
+<!--
+h='&#x67;&#x6d;&#x61;&#x69;&#108;&#46;&#x63;&#x6f;&#x6d;';a='&#64;';n='&#x77;&#x75;&#x73;&#104;&#x39;&#x37;&#56;';e=n+a+h;
+document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+e+'<\/'+'a'+'>');
+// -->
+</script><noscript>&#x77;&#x75;&#x73;&#104;&#x39;&#x37;&#56;&#32;&#x61;&#116;&#32;&#x67;&#x6d;&#x61;&#x69;&#108;&#32;&#100;&#x6f;&#116;&#32;&#x63;&#x6f;&#x6d;</noscript>)</a></h4>
+<ul>
+<li><a href="https://www.facebook.com/Tw.R.User">Taiwan R User Group</a> Organizer</li>
+<li>R 相關著作：
+<ul>
+<li><a href="http://cran.r-project.org/web/packages/RMessenger/index.html">RMessenger</a>的作者</li>
+<li><a href="https://bitbucket.org/wush_iis/rsus">RSUS</a>，這是<a href="http://www.cs.sfu.ca/~jpei/publications/MISQ_ICDE12.pdf">On Shortest Unique Substring Query</a>的實作</li>
+</ul></li>
+<li>研究領域：Large Scale Learning，<a href="http://www.cs.sfu.ca/~jpei/publications/MISQ_ICDE12.pdf">Text Mining</a>和<a href="http://www.cs.sfu.ca/~jpei/publications/Shortest%20Unique%20Substring%20Queries%20ICDE13.pdf">Uncertain Time Series</a></li>
+</ul>
 </div>
 <div id="footer">
 <a href="https://www.facebook.com/groups/programmerMagazine/">程式人雜誌</a> ，採用 <a href="http://creativecommons.org/licenses/by-sa/3.0/tw/ ">創作共用：姓名標示、相同方式分享</a> 授權，歡迎加入 <a href="https://www.facebook.com/groups/programmerMagazine/">雜誌社團</a>
